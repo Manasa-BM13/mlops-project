@@ -19,4 +19,4 @@ def predict(data: dict):
         prediction = model.predict(features)
         return {"prediction": int(prediction[0])}
     except Exception as e:
-        return {"error": str(e), "hint": "Send like {\"features\": [5.1, 3.5, 1.4, 0.2]}"}
+        return {"error": str(e)}
