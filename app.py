@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 import joblib
 import numpy as np
+import os
 
 app = FastAPI()
-model = joblib.load("model.pkl")
+
+model_path = os.path.join(os.path.dirname(__file__), "model.pkl")
+model = joblib.load(model_path)
 
 @app.get("/")
 def home():
@@ -11,6 +14,9 @@ def home():
 
 @app.post("/predict")
 def predict(data: dict):
-    features = np.array(data["features"]).reshape(1, -1)
-    prediction = model.predict(features)
-    return {"prediction": int(prediction[0])}
+    try:
+        features = np.array(data["features"]).reshape(1, -1)
+        prediction = model.predict(features)
+        return {"prediction": int(prediction[0])}
+    except Exception as e:
+        return {"error": str(e), "hint": "Send like {\"features\": [5.1, 3.5, 1.4, 0.2]}"}
